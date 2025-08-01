@@ -223,6 +223,8 @@ function requireAuth(req, res, next) {
   next();
 }
 
+
+
 // Protected routes
 app.get('/main.html', requireAuth, (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'main.html'));
