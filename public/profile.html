@@ -7,17 +7,21 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body class="bg">
-  <div class="navbar">
-    <h2>Civic Reporter</h2>
-    <ul>
-      <li><a href="main.html">Dashboard</a></li>
-      <li><a href="profile.html">Profile</a></li>
-      <li><a href="report.html">Report an Issue</a></li>
-      <li><a href="view-issues.html">View Issues</a></li>
-      <li><a href="contact.html">Contact & Help</a></li>
-      <li><a href="/logout">Logout</a></li>
-    </ul>
+  <nav class="navbar">
+  <div class="logo">Civic Reporter</div>
+  <ul class="nav-links">
+    <li><a href="main.html">Dashboard</a></li>
+    <li><a href="profile.html">Profile</a></li>
+    <li><a href="report-issue.html">Report Issue</a></li>
+    <li><a href="view-issues.html">View Issues</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+  <div class="hamburger">
+    <span></span>
+    <span></span>
+    <span></span>
   </div>
+</nav>
 
   <div class="main-content">
     <h1>Your Profile</h1>
@@ -30,7 +34,8 @@
   </div>
 </body>
 <script>
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', loadProfile);
+function loadProfile() {
   fetch('/profile-data')
     .then(res => res.json())
     .then(user => {
@@ -46,12 +51,36 @@ document.addEventListener('DOMContentLoaded', function() {
       console.error('Error fetching profile:', error);
       document.getElementById('profile-info').innerHTML = '<p class="error">Failed to load profile data.</p>';
     });
-});
+}
+
+
+async function updateProfile(username, email) {
+  const res = await fetch("/update-profile", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ username, email })
+  });
+
+  const result = await res.json();
+  if (result.success) {
+    alert(result.message);
+    loadProfile(); 
+  } else {
+    alert("Update failed");
+  }
+}
 
 function logout() {
   if (confirm('Are you sure you want to logout?')) {
     window.location.href = '/logout';
   }
 }
+
+const hamburger = document.querySelector(".hamburger");
+const navLinks = document.querySelector(".nav-links");
+
+hamburger.addEventListener("click", () => {
+  navLinks.classList.toggle("active");
+});
 </script>
 </html>
